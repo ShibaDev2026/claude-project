@@ -125,7 +125,11 @@ pipeline {
         stage('Docker Build') {
             steps {
                 echo '=== [5/6] Docker Build — building image ==='
-                sh "docker build -t ${IMAGE_NAME} -t ${IMAGE_LATEST} ."
+                sh """
+                    DOCKER_BUILDKIT=0 docker build \
+                      -t ${IMAGE_NAME} \
+                      -t ${IMAGE_LATEST} .
+                """
             }
         }
 
