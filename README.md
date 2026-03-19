@@ -31,7 +31,7 @@
 | JDK 現代化 | 🔵 進行中 | 1.8 → 11 / 17 / 21 / 24 |
 | Mockito 測試策略 | 🔵 進行中 | 含 WireMock、ArchUnit、Testcontainers |
 | 框架強化 | ⚪ 待開始 | Spring Boot 4.x / Security / Batch |
-| 容器化與基礎設施 | 🔵 進行中 | Jenkins CI 已完成，Harbor / Nexus / K8S 進行中 |
+| 容器化與基礎設施 | 🔵 進行中 | Jenkins CI / Nexus 已完成，Harbor / K8S 進行中 |
 | AI 整合 | ⚪ 待開始 | Spring AI、RAG |
 | 自架 MCP Server | 🟠 規劃中 | 後台控管平台 |
 
@@ -115,8 +115,8 @@ Virtual Thread 能大幅降低 I/O 密集型服務的執行緒開銷。
 | 工具 | 用途 | 狀態 |
 |------|------|------|
 | Jenkins | 多分支 Pipeline，自動化建置 / 測試 / 部署 | 🔵 進行中 |
+| Nexus | Maven 私有 Repository，依賴快取加速 build | ✅ 完成 |
 | Harbor | 私有 Docker Registry，支援映像掃描 | ⚪ 待建置 |
-| Nexus | Maven 私有 Repository，依賴快取加速 build | ⚪ 待建置 |
 | Kubernetes | 藍綠部署、HPA 自動擴縮容 | ⚪ 待建置 |
 
 #### Jenkins 已完成項目 ✅
@@ -160,6 +160,58 @@ GitHub (develop)
 - [x] Dockerfile（由 jenkins-pipeline 集中管理）
 - [ ] Harbor push stage
 - [ ] K8S Manifest + Helm Chart
+
+---
+
+### 本地開發 Maven 設定
+
+本專案透過 `mvn-local.sh` 自動偵測本地 Nexus 是否可用，決定走 proxy 或直連 Maven Central。
+
+#### 前置條件
+
+在本機建立以下兩份 settings.xml（不入版控）：
+
+| 檔案 | 用途 |
+|------|------|
+| `~/.m2/settings.xml` | 走本地 Nexus proxy（`localhost:9190`）|
+| `~/.m2/settings-direct.xml` | 直連 Maven Central（Nexus 未啟動時）|
+
+`settings.xml` 範本：
+
+```xml
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus-local</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://localhost:9190/repository/maven-public/</url>
+    </mirror>
+  </mirrors>
+</settings>
+```
+
+`settings-direct.xml` 為空白 settings，不設定任何 mirror，Maven 自動走 Maven Central。
+
+#### 使用方式
+
+```bash
+# 取代 ./mvnw，其餘參數完全相同
+./mvn-local.sh clean install
+./mvn-local.sh test
+./mvn-local.sh package -DskipTests
+```
+
+#### 運作邏輯
+
+```
+執行 mvn-local.sh
+    ├── 偵測 localhost:9190（timeout 2s）
+    │     ├── 可用 → 走 ~/.m2/settings.xml（Nexus proxy）
+    │     └── 不可用 → 走 ~/.m2/settings-direct.xml（Maven Central）
+    └── 執行 ./mvnw [傳入的參數]
+```
+
+> CI Pipeline（Jenkins）另外使用 Agent 內建的 `settings.xml`，指向內部 IP `172.20.0.3:8081`，不受本機設定影響。
 
 ---
 
@@ -260,6 +312,6 @@ GitHub (develop)
 ---
 <div align="center">
 
-*Last updated：2026-03-12 &nbsp;|&nbsp; Maintained by：（填入名稱）*
+*Last updated：2026-03-19 &nbsp;|&nbsp; Maintained by：（填入名稱）*
 
 </div>
