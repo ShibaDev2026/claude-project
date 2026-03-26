@@ -1,4 +1,4 @@
-@Library('jenkins-pipeline@v1.2.4') _
+@Library('jenkins-pipeline@v1.2.5') _
 
 ciPipeline(
     githubCredentials: 'github-credentials',
