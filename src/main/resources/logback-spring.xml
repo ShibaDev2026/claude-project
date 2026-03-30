@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Startup timestamp for file naming (evaluated once at startup) -->
+    <timestamp key="LOG_YEAR"  datePattern="yyyy"/>
+    <timestamp key="LOG_MONTH" datePattern="MM"/>
+    <timestamp key="LOG_DAY"   datePattern="dd"/>
+    <timestamp key="LOG_DATE"  datePattern="yyyyMMdd"/>
+    <timestamp key="LOG_TIME"  datePattern="HHmmss"/>
+
+    <!-- Log switch and level from application.properties -->
+    <springProperty name="APP_LOG_ENABLED" source="logging.app.enabled"  defaultValue="true"/>
+    <springProperty name="APP_LOG_LEVEL"   source="logging.app.level"    defaultValue="DEBUG"/>
+
+    <!-- Log file path: log/yyyy/MM/dd/yyyy-MM-dd_HHmmss.SSS.txt -->
+    <property name="LOG_DIR"  value="log/${LOG_YEAR}/${LOG_MONTH}/${LOG_DAY}"/>
+    <property name="LOG_FILE" value="${LOG_DIR}/${LOG_DATE}_${LOG_TIME}.log"/>
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- File Appender -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_FILE}</file>
+        <append>true</append>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Application logger: com.claude.project -->
+    <logger name="com.claude.project" level="${APP_LOG_LEVEL}" additivity="false">
+        <if condition='"true".equals(property("APP_LOG_ENABLED"))'>
+            <then>
+                <appender-ref ref="CONSOLE"/>
+                <appender-ref ref="FILE"/>
+            </then>
+        </if>
+    </logger>
+
+    <!-- Root logger (Spring framework, Hibernate, etc.) -->
+    <root level="INFO">
+        <if condition='"true".equals(property("APP_LOG_ENABLED"))'>
+            <then>
+                <appender-ref ref="CONSOLE"/>
+                <appender-ref ref="FILE"/>
+            </then>
+        </if>
+    </root>
+
+</configuration>
