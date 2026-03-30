@@ -31,7 +31,7 @@
 | JDK 現代化 | 🔵 進行中 | 1.8 → 11 / 17 / 21 / 24 |
 | Mockito 測試策略 | 🔵 進行中 | 含 WireMock、ArchUnit、Testcontainers |
 | 框架強化 | ⚪ 待開始 | Spring Boot 4.x / Security / Batch |
-| 容器化與基礎設施 | 🔵 進行中 | Jenkins CI / Nexus 已完成，Harbor / K8S 進行中 |
+| 容器化與基礎設施 | 🔵 進行中 | Jenkins CI / Nexus / Harbor 已完成，K8S 待建置 |
 | AI 整合 | ⚪ 待開始 | Spring AI、RAG |
 | 自架 MCP Server | 🟠 規劃中 | 後台控管平台 |
 
@@ -121,7 +121,7 @@ Virtual Thread 能大幅降低 I/O 密集型服務的執行緒開銷。
 
 #### Jenkins 已完成項目 ✅
 
-- Jenkins LTS（JDK 21）+ 動態 Agent 架設完成
+- Jenkins LTS（JDK 21）v2.541.3 + 動態 Agent（Alpine JDK 21）架設完成
 - Docker Socket Binding，Agent 可執行 Docker build
 - Role-based Authorization，多專案帳號權限隔離
 - JCaC（Configuration as Code）設定版控
@@ -157,7 +157,7 @@ GitHub (develop)
 
 **預期產出：**
 - [x] Jenkinsfile（精簡版，引用 Shared Library）
-- [x] Dockerfile（由 jenkins-pipeline 集中管理）
+- [x] Dockerfile（由 jenkins-pipeline-scripts 集中管理）
 - [x] Harbor push stage
 - [ ] K8S Manifest + Helm Chart
 
@@ -294,8 +294,9 @@ GitHub (develop)
 | ArchUnit | 1.x | 架構測試 |
 | Testcontainers | 1.x | 整合測試容器 |
 | Docker / Compose | latest | 本地容器化 |
-| Jenkins | LTS (JDK 21) | CI/CD Controller |
-| Harbor | 2.11.2 | 私有 Docker Registry |
+| Jenkins | LTS v2.541.3 (JDK 21) | CI/CD Controller |
+| Harbor | v2.11.2 | 私有 Docker Registry |
+| JaCoCo | 0.8.14 | Java Coverage 報告 |
 | Nexus | 3.x | Maven 私有 Repository |
 | Kubernetes | 1.29+ | 生產部署 |
 | Spring AI | 1.x | AI 整合 |
