@@ -9,6 +9,16 @@
 
 ---
 
+## [0.5.0] - 2026-03-30
+
+### Added
+- `pom.xml` 加入 JaCoCo Maven Plugin，支援 CI Coverage 報告
+  - `prepare-agent` execution：綁定 `initialize` phase，注入 JaCoCo agent 參數至 Surefire
+  - `report` execution：綁定 `verify` phase，產生 HTML 報告（`target/site/jacoco/`）
+  - 版本由 `<jacoco.version>` property 管理（`0.8.14`）
+
+---
+
 ## [0.4.0] - 2026-03-19
 
 ### Added
@@ -59,7 +69,8 @@
 - 分層目錄結構：`config` / `controller` / `domain` / `dto` / `repository` / `service`
 - Testcontainers 整合測試基礎設定
 
-[Unreleased]: https://github.com/ShibaDev2026/claude-project/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/ShibaDev2026/claude-project/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/ShibaDev2026/claude-project/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ShibaDev2026/claude-project/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ShibaDev2026/claude-project/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ShibaDev2026/claude-project/compare/v0.1.0...v0.2.0

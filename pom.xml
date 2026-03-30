@@ -28,6 +28,8 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<!-- JaCoCo 版本需明確指定，Spring Boot 4.x parent 未納入 pluginManagement 管理 -->
+		<jacoco.version>0.8.14</jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -99,6 +101,23 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<!-- prepare-agent：綁定 initialize phase，插入 JaCoCo agent 參數至 Surefire -->
+					<execution>
+						<id>prepare-agent</id>
+						<goals><goal>prepare-agent</goal></goals>
+					</execution>
+					<!-- report：綁定 verify phase，產生 HTML 報告至 target/site/jacoco/ -->
+					<execution>
+						<id>report</id>
+						<goals><goal>report</goal></goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
