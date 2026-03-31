@@ -1,0 +1,16 @@
+# Service manifest — claude-project（NodePort）
+# 佔位符由 cd.sh deploy_if_needed() 透過 envsubst 替換：
+#   ${APP_NAME}  pom.xml artifactId
+#   ${NODE_PORT} develop → 30090 / prod → 30091
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME}
+spec:
+  selector:
+    app: ${APP_NAME}
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: ${NODE_PORT}

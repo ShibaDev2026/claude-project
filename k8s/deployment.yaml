@@ -1,0 +1,33 @@
+# Deployment manifest — claude-project
+# 佔位符由 cd.sh deploy_if_needed() 透過 envsubst 替換：
+#   ${APP_NAME}     pom.xml artifactId
+#   ${HARBOR_IMAGE} 172.20.0.4:8080/<app>/<app>:<branch>-<version>-<build>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+        - name: ${APP_NAME}
+          image: ${HARBOR_IMAGE}
+          ports:
+            - containerPort: 8080
+          # readinessProbe：Spring Boot Actuator health endpoint
+          # initialDelaySeconds: 20 — 給 Spring Boot 足夠的啟動時間
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
